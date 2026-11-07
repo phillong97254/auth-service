@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 
-	v1 "github.com/phil/auth-service/internal/handler/rest/v1"
+	v1 "github.com/phillong97254/auth-service/internal/handler/rest/v1"
 )
 
 // Endpoint chuẩn OAuth2/OIDC, không có prefix /v1 để client (oauth2 lib, Keycloak-compatible) dùng thẳng.

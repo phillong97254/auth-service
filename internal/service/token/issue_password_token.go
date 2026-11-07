@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	userRepo "github.com/phil/auth-service/internal/repository/user"
+	userRepo "github.com/phillong97254/auth-service/internal/repository/user"
 )
 
 // IssuePasswordToken: grant_type=password, admin đăng nhập từ backoffice.

@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	clientRepo "github.com/phil/auth-service/internal/repository/client"
+	clientRepo "github.com/phillong97254/auth-service/internal/repository/client"
 )
 
 // IssueClientToken: grant_type=client_credentials, service tự xin token cho chính nó.

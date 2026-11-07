@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/phil/auth-service/config"
-	"github.com/phil/auth-service/internal/repository"
+	"github.com/phillong97254/auth-service/config"
+	"github.com/phillong97254/auth-service/internal/repository"
 )
 
 type impl struct {

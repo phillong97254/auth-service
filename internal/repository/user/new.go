@@ -1,6 +1,6 @@
 package user
 
-import "github.com/phil/auth-service/internal/domain"
+import "github.com/phillong97254/auth-service/internal/domain"
 
 type impl struct {
 	users map[string]domain.User

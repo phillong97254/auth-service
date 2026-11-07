@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/phil/auth-service/internal/repository/client"
-	"github.com/phil/auth-service/internal/repository/user"
+	"github.com/phillong97254/auth-service/internal/repository/client"
+	"github.com/phillong97254/auth-service/internal/repository/user"
 )
 
 // Registry gom các repository của service. Hiện lưu in-memory, đổi sang DB thì chỉ sửa tầng này.

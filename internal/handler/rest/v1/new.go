@@ -3,8 +3,8 @@ package v1
 import (
 	"log/slog"
 
-	"github.com/phil/auth-service/internal/handler/rest/v1/public"
-	"github.com/phil/auth-service/internal/service/token"
+	"github.com/phillong97254/auth-service/internal/handler/rest/v1/public"
+	"github.com/phillong97254/auth-service/internal/service/token"
 )
 
 type impl struct {

@@ -3,8 +3,8 @@ package repository
 import (
 	"sync"
 
-	"github.com/phil/auth-service/internal/repository/client"
-	"github.com/phil/auth-service/internal/repository/user"
+	"github.com/phillong97254/auth-service/internal/repository/client"
+	"github.com/phillong97254/auth-service/internal/repository/user"
 )
 
 type impl struct {

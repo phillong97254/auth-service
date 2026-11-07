@@ -19,11 +19,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/phil/auth-service/cmd/rest/routes"
-	"github.com/phil/auth-service/config"
-	v1 "github.com/phil/auth-service/internal/handler/rest/v1"
-	"github.com/phil/auth-service/internal/repository"
-	"github.com/phil/auth-service/internal/service/token"
+	"github.com/phillong97254/auth-service/cmd/rest/routes"
+	"github.com/phillong97254/auth-service/config"
+	v1 "github.com/phillong97254/auth-service/internal/handler/rest/v1"
+	"github.com/phillong97254/auth-service/internal/repository"
+	"github.com/phillong97254/auth-service/internal/service/token"
 )
 
 func main() {

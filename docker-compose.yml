@@ -4,7 +4,7 @@ name: "go-admin-wallet-auth-service"
 services:
   auth-service:
     container_name: auth-service-${ENV:-dev}
-    image: ${REGISTRY:-go-admin-wallet}/auth-service:${TAG:-dev-latest}
+    image: ${REGISTRY:-ghcr.io/phillong97254}/auth-service:${TAG:-dev-latest}
     build:
       context: .
     ports:

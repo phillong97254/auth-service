@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 
-	"github.com/phil/auth-service/internal/domain"
+	"github.com/phillong97254/auth-service/internal/domain"
 )
 
 type Repository interface {

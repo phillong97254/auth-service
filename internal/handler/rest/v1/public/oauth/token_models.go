@@ -3,7 +3,7 @@ package oauth
 import (
 	"net/http"
 
-	"github.com/phil/auth-service/internal/service/token"
+	"github.com/phillong97254/auth-service/internal/service/token"
 )
 
 const (

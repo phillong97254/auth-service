@@ -8,7 +8,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 
-	auth "github.com/phil/go-lib/authkit"
+	auth "github.com/phillong97254/go-lib/authkit"
 )
 
 type signInput struct {

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/phil/auth-service/internal/service/token"
-	auth "github.com/phil/go-lib/authkit"
+	"github.com/phillong97254/auth-service/internal/service/token"
+	auth "github.com/phillong97254/go-lib/authkit"
 )
 
 func (i *impl) Token(w http.ResponseWriter, r *http.Request) {

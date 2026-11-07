@@ -1,6 +1,6 @@
 package client
 
-import "github.com/phil/auth-service/internal/domain"
+import "github.com/phillong97254/auth-service/internal/domain"
 
 type impl struct {
 	clients map[string]domain.Client
