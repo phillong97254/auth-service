@@ -2,7 +2,12 @@
 
 OAuth2 Authorization Server tối giản (thay cho Keycloak): `POST /oauth/token` (password, client_credentials) và `GET /.well-known/jwks.json`.
 
-Không phụ thuộc service nào. Phải chạy **trước** vì các service khác lấy JWKS từ đây.
+Chỉ kiểm tra **ai là ai** (tài khoản + mật khẩu, client secret). **Role/scope** của user lấy từ
+**authz-service** (`GetUserRoles`, gRPC) ngay lúc phát token; auth-service tự ký token m2m (scope `roles:read`)
+để gọi, nên không cần client secret. authz-service không trả lời được thì login trả `503 temporarily_unavailable`
+(không phát token thiếu quyền). Địa chỉ: `authz_service.addr` / env `AUTHZ_SERVICE_ADDR`.
+
+Các service khác lấy JWKS từ đây để verify token.
 
 ## Chạy
 
@@ -54,6 +59,13 @@ vendor/                      # thư viện (kể cả go-lib), tạo bằng make
 internal/
     domain/
     internal/repository/{user,client}   # dữ liệu demo (in-memory)
-    internal/service/token               # ký JWT RS256, JWKS, thu hẹp scope
+    internal/signer                      # giữ private key, ký JWT RS256, JWKS
+    internal/gateway/authz               # gRPC client tới authz-service
+    internal/service/token               # phát token (password: hỏi role ở authz-service; client_credentials)
     internal/handler/rest/v1/public/oauth
 ```
+
+## gRPC contract
+
+`api/proto/authz/v1/authz.proto` → `pkg/gen/authz/v1`. Đây là bản copy hợp đồng của authz-service: sửa proto ở
+authz-service trước rồi copy file `.proto` sang đây, sau đó `make gen-proto`.

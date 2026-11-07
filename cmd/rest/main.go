@@ -21,9 +21,11 @@ import (
 
 	"github.com/phillong97254/auth-service/cmd/rest/routes"
 	"github.com/phillong97254/auth-service/config"
+	"github.com/phillong97254/auth-service/internal/gateway"
 	v1 "github.com/phillong97254/auth-service/internal/handler/rest/v1"
 	"github.com/phillong97254/auth-service/internal/repository"
 	"github.com/phillong97254/auth-service/internal/service/token"
+	"github.com/phillong97254/auth-service/internal/signer"
 )
 
 func main() {
@@ -43,9 +45,18 @@ func main() {
 		log.Fatal(err)
 	}
 
+	sign := signer.New(cfg, key)
+
+	// Gateway: client gọi authz-service (role/scope của user)
+	gwy, err := gateway.New(cfg, sign)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer gwy.Close()
+
 	// Repository -> Service -> Handler
 	repo := repository.New(cfg)
-	tokenSvc := token.New(cfg, logger, repo, key)
+	tokenSvc := token.New(cfg, logger, repo, gwy, sign)
 	handler := v1.New(logger, tokenSvc)
 
 	// Register Routes

@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	clientRepo "github.com/phillong97254/auth-service/internal/repository/client"
+	"github.com/phillong97254/auth-service/internal/signer"
 )
 
 // IssueClientToken: grant_type=client_credentials, service tự xin token cho chính nó.
@@ -19,9 +20,9 @@ func (i *impl) IssueClientToken(ctx context.Context, input IssueClientTokenInput
 	if !secretEqual(c.Secret, input.ClientSecret) {
 		return TokenOutput{}, ErrInvalidClient
 	}
-	return i.sign(signInput{
-		subject:  "service:" + c.ID,
-		scope:    narrowScope(c.Scope, input.Scope),
-		clientID: c.ID,
+	return i.sign(signer.SignInput{
+		Subject:  "service:" + c.ID,
+		Scope:    narrowScope(c.Scope, input.Scope),
+		ClientID: c.ID,
 	})
 }

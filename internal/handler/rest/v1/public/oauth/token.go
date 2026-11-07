@@ -35,6 +35,9 @@ func (i *impl) Token(w http.ResponseWriter, r *http.Request) {
 		auth.WriteJSON(w, http.StatusOK, toTokenResponse(out))
 	case errors.Is(err, token.ErrInvalidGrant), errors.Is(err, token.ErrInvalidClient), errors.Is(err, token.ErrInvalidRequest):
 		writeOAuthError(w, err.Error())
+	case errors.Is(err, token.ErrTemporarilyUnavailable):
+		i.logger.Error("issue token", "grant_type", req.GrantType, "error", err)
+		auth.WriteJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "temporarily_unavailable"})
 	default:
 		i.logger.Error("issue token", "grant_type", req.GrantType, "error", err)
 		auth.WriteError(w, http.StatusInternalServerError, "internal error")

@@ -16,9 +16,10 @@ export
 # Shorten cmd
 DOCKER_BIN := docker
 COMPOSE_BIN := ENV=$(ENV) GROUP_NAME=$(GROUP_NAME) PROJECT_NAME=$(PROJECT_NAME) REGISTRY=$(REGISTRY) TAG=$(TAG) docker compose
+COMPOSE_GO_TOOL_RUN := $(COMPOSE_BIN) -f docker-compose.tools.yml run --rm go-tools
 
 .PHONY: env netrc run mod mod-local mod-remote test build-bin up down logs build docker-build docker-login docker-push \
-	ci-docker-build ci-docker-login ci-docker-push ci-docker-clean
+	ci-docker-build ci-docker-login ci-docker-push ci-docker-clean gen-proto
 
 # ---------- Go (local) ----------
 env:
@@ -100,3 +101,8 @@ ci-docker-push:
 ci-docker-clean:
 	@$(DOCKER_BIN) image rm -f $(IMAGE):$(TAG)
 	-@$(DOCKER_BIN) image prune -f
+
+# ---------- Codegen ----------
+# Sinh lại code gRPC từ api/proto vào pkg/gen bằng image go-tools (không cần cài buf trên máy)
+gen-proto:
+	@$(COMPOSE_GO_TOOL_RUN) sh -c 'cd api && buf generate'

@@ -1,0 +1,51 @@
+// Bản copy hợp đồng của authz-service (bản gốc ở repo authz-service). Sửa ở đó rồi copy sang đây + make gen-proto.
+syntax = "proto3";
+
+package authz.v1;
+
+option go_package = "github.com/phillong97254/auth-service/pkg/gen/authz/v1;authzv1";
+
+// AuthzService là nguồn sự thật duy nhất về role/quyền của người dùng.
+// auth-service hỏi GetUserRoles khi phát token, backoffice gọi Grant/Revoke cho superadmin.
+// Quyền theo RPC: xem cmd/grpc/routes/policies.go.
+service AuthzService {
+  rpc ListRoles(ListRolesRequest) returns (ListRolesResponse);         // scope: roles:read
+  rpc GetUserRoles(GetUserRolesRequest) returns (UserRoles);           // scope: roles:read (auth-service, m2m)
+  rpc GrantRole(GrantRoleRequest) returns (UserRoles);                 // scope: roles:write + role: superadmin
+  rpc RevokeRole(RevokeRoleRequest) returns (UserRoles);               // scope: roles:write + role: superadmin
+}
+
+message Role {
+  string name = 1;
+  string description = 2;
+  repeated string scopes = 3;
+}
+
+message ListRolesRequest {}
+
+message ListRolesResponse { repeated Role items = 1; }
+
+message RoleBinding {
+  string role = 1;
+  string granted_by = 2;
+  int64 granted_at_unix = 3;
+}
+
+message UserRoles {
+  string user_id = 1;
+  repeated RoleBinding bindings = 2;
+  repeated string roles = 3; // tên role, tiện cho việc nhét vào JWT
+  string scope = 4;          // hợp các scope của mọi role, cách nhau bằng dấu cách
+}
+
+message GetUserRolesRequest { string user_id = 1; }
+
+message GrantRoleRequest {
+  string user_id = 1;
+  string role = 2;
+}
+
+message RevokeRoleRequest {
+  string user_id = 1;
+  string role = 2;
+}

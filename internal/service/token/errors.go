@@ -7,4 +7,6 @@ var (
 	ErrInvalidRequest = errors.New("invalid_request")
 	ErrInvalidGrant   = errors.New("invalid_grant")
 	ErrInvalidClient  = errors.New("invalid_client")
+	// authz-service không trả lời được: không phát token thiếu quyền.
+	ErrTemporarilyUnavailable = errors.New("temporarily_unavailable")
 )

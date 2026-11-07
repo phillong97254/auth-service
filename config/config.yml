@@ -16,3 +16,7 @@ oauth:
   # Secret của OAuth client "backoffice" (client_credentials). KHÔNG ghi ở đây,
   # đặt qua env OAUTH_BACKOFFICE_CLIENT_SECRET (file .env, không commit).
   backoffice_client_secret: ""
+
+authz_service:
+  addr: localhost:50052
+  timeout: 3 # giây

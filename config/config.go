@@ -8,9 +8,16 @@ import (
 )
 
 type Config struct {
-	RestServer RestServer `mapstructure:"rest_server"`
-	API        API        `mapstructure:"api"`
-	OAuth      OAuth      `mapstructure:"oauth"`
+	RestServer   RestServer   `mapstructure:"rest_server"`
+	API          API          `mapstructure:"api"`
+	OAuth        OAuth        `mapstructure:"oauth"`
+	AuthzService AuthzService `mapstructure:"authz_service"`
+}
+
+// AuthzService: nơi lấy role/scope của user khi phát token.
+type AuthzService struct {
+	Addr    string `mapstructure:"addr"`
+	Timeout int    `mapstructure:"timeout"` // giây
 }
 
 type RestServer struct {
