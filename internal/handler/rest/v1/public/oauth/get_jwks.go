@@ -3,7 +3,7 @@ package oauth
 import (
 	"net/http"
 
-	auth "github.com/phil/auth-service/pkg/authkit"
+	auth "github.com/phil/go-lib/authkit"
 )
 
 func (i *impl) GetJWKS(w http.ResponseWriter, r *http.Request) {

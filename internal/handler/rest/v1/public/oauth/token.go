@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/phil/auth-service/internal/service/token"
-	auth "github.com/phil/auth-service/pkg/authkit"
+	auth "github.com/phil/go-lib/authkit"
 )
 
 func (i *impl) Token(w http.ResponseWriter, r *http.Request) {

@@ -3,7 +3,7 @@ package token
 import (
 	"context"
 
-	auth "github.com/phil/auth-service/pkg/authkit"
+	auth "github.com/phil/go-lib/authkit"
 )
 
 func (i *impl) GetJWKS(_ context.Context) GetJWKSOutput {
