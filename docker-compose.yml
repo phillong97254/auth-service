@@ -1,0 +1,22 @@
+name: "go-admin-wallet-auth-service"
+# Chạy riêng service này trong Docker (make up). Các service khác chạy trên máy (go run)
+# hoặc container khác, gọi qua host.docker.internal. Chạy cả hệ thống: docker-compose.yml ở thư mục gốc.
+services:
+  auth-service:
+    container_name: auth-service-${ENV:-dev}
+    image: ${REGISTRY:-go-admin-wallet}/auth-service:${TAG:-dev-latest}
+    build:
+      context: .
+    ports:
+      - "9000:9000"
+    environment:
+      REST_SERVER_ADDR: ":9000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    networks:
+      - auth-service-network
+
+networks:
+  auth-service-network:
+    driver: bridge
