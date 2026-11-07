@@ -13,3 +13,6 @@ oauth:
   audience: admin-api
   key_id: demo-key-1
   token_ttl: 900 # giây
+  # Secret của OAuth client "backoffice" (client_credentials). KHÔNG ghi ở đây,
+  # đặt qua env OAUTH_BACKOFFICE_CLIENT_SECRET (file .env, không commit).
+  backoffice_client_secret: ""

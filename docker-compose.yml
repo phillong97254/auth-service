@@ -11,6 +11,7 @@ services:
       - "9000:9000"
     environment:
       REST_SERVER_ADDR: ":9000"
+      OAUTH_BACKOFFICE_CLIENT_SECRET: ${OAUTH_BACKOFFICE_CLIENT_SECRET:?đặt trong .env (xem .env.example)}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped

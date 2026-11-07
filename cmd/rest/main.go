@@ -44,7 +44,7 @@ func main() {
 	}
 
 	// Repository -> Service -> Handler
-	repo := repository.New()
+	repo := repository.New(cfg)
 	tokenSvc := token.New(cfg, logger, repo, key)
 	handler := v1.New(logger, tokenSvc)
 

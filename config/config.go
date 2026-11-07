@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -28,6 +29,8 @@ type OAuth struct {
 	Audience string `mapstructure:"audience"`
 	KeyID    string `mapstructure:"key_id"`
 	TokenTTL int    `mapstructure:"token_ttl"` // giây
+	// Secret lấy từ env OAUTH_BACKOFFICE_CLIENT_SECRET, không để trong config.yml.
+	BackofficeClientSecret string `mapstructure:"backoffice_client_secret"`
 }
 
 // NewConfig đọc config/config.yml, biến môi trường ghi đè theo quy tắc "." -> "_"
@@ -50,6 +53,9 @@ func NewConfig() (*Config, error) {
 
 	if err := v.Unmarshal(&cfg); err != nil {
 		return nil, err
+	}
+	if cfg.OAuth.BackofficeClientSecret == "" {
+		return nil, errors.New("missing OAUTH_BACKOFFICE_CLIENT_SECRET (xem .env.example)")
 	}
 
 	return &cfg, nil
