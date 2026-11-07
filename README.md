@@ -2,7 +2,7 @@
 
 OAuth2 Authorization Server tối giản (thay cho Keycloak): `POST /oauth/token` (password, client_credentials) và `GET /.well-known/jwks.json`.
 
-Chỉ kiểm tra **ai là ai** (tài khoản + mật khẩu, client secret). **Role/scope** của user lấy từ
+Chỉ kiểm tra **ai là ai** (tài khoản trong Postgres với mật khẩu bcrypt, client secret từ env). **Role/scope** của user lấy từ
 **authz-service** (`GetUserRoles`, gRPC) ngay lúc phát token; auth-service tự ký token m2m (scope `roles:read`)
 để gọi, nên không cần client secret. authz-service không trả lời được thì login trả `503 temporarily_unavailable`
 (không phát token thiếu quyền). Địa chỉ: `authz_service.addr` / env `AUTHZ_SERVICE_ADDR`.
@@ -14,13 +14,30 @@ Các service khác lấy JWKS từ đây để verify token.
 Folder này là 1 project Go độc lập (repo git, module riêng), mở folder lên rồi:
 
 ```bash
-make env              # lần đầu: tạo .env từ .env.example
+make init             # lần đầu: tạo .env, bật Postgres, migrate
 go run ./cmd/rest    # hoặc: make run
 make test             # go test -race ./...
 ```
 
 Cấu hình ở `config/config.yml`, ghi đè bằng biến môi trường theo quy tắc `.` → `_`
 (ví dụ `REST_SERVER_ADDR=:9999`, `OAUTH_JWKS_URL=...`).
+
+## Database (Postgres)
+
+Service có Postgres riêng (database-per-service), bảng: `users` (mật khẩu bcrypt). Repository dùng gorm (`go-lib/database`).
+
+```bash
+make init             # lần đầu: tạo .env, bật Postgres (docker, cổng 54321) và migrate
+make run              # service tự migrate khi khởi động (db.auto_migrate: true)
+make migrate          # chạy tay: migrate up bằng go-tools (giống dự án cũ)
+make redo-migrate     # xoá hết rồi migrate lại (mất dữ liệu)
+```
+
+- Migration: `migration/scripts/000000001_init.*.sql` (schema), `000000002_seed.*.sql` (dữ liệu demo).
+  Thêm thay đổi DB thì tạo cặp file số tiếp theo (`000000003_<tên>.up.sql` / `.down.sql`).
+- Kết nối: `DB_URL` trong `.env` (`postgres://auth:<DB_PASSWORD>@localhost:54321/auth_db?sslmode=disable`), không để trong `config.yml`.
+- Dữ liệu Postgres lưu ở `./tmp/postgres_data` (đã gitignore). Xoá thư mục này để làm lại từ đầu.
+- Test cần Postgres: `TEST_DB_URL=...auth_db_test... make test` (database riêng cho test, sẽ bị xoá dữ liệu); không đặt thì test DB được bỏ qua.
 
 ## Secret và cấu hình
 
@@ -58,7 +75,7 @@ config/                      # config.go (viper) + config.yml
 vendor/                      # thư viện (kể cả go-lib), tạo bằng make mod
 internal/
     domain/
-    internal/repository/{user,client}   # dữ liệu demo (in-memory)
+    internal/repository/{user,client}   # user: Postgres; client: từ config/env
     internal/signer                      # giữ private key, ký JWT RS256, JWKS
     internal/gateway/authz               # gRPC client tới authz-service
     internal/service/token               # phát token (password: hỏi role ở authz-service; client_credentials)

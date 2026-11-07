@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/phillong97254/auth-service/config"
+	"gorm.io/gorm"
 	"sync"
 
 	"github.com/phillong97254/auth-service/internal/repository/client"
@@ -10,6 +11,7 @@ import (
 
 type impl struct {
 	cfg *config.Config
+	db  *gorm.DB
 
 	user     user.Repository
 	userOnce sync.Once
@@ -18,12 +20,12 @@ type impl struct {
 	clientOnce sync.Once
 }
 
-func New(cfg *config.Config) Registry {
-	return &impl{cfg: cfg}
+func New(cfg *config.Config, db *gorm.DB) Registry {
+	return &impl{cfg: cfg, db: db}
 }
 
 func (i *impl) User() user.Repository {
-	i.userOnce.Do(func() { i.user = user.New() })
+	i.userOnce.Do(func() { i.user = user.New(i.db) })
 	return i.user
 }
 

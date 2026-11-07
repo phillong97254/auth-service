@@ -1,8 +1,14 @@
 package domain
 
-// User là người dùng backoffice. Demo lưu mật khẩu thô; thực tế phải hash bcrypt/argon2.
+import "time"
+
+// User là tài khoản backoffice. Mật khẩu lưu dạng bcrypt.
 // Role/scope KHÔNG lưu ở đây: authz-service quản lý, auth-service hỏi khi phát token.
 type User struct {
-	Username string
-	Password string
+	Username     string `gorm:"primaryKey"`
+	PasswordHash string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
+
+func (User) TableName() string { return "users" }

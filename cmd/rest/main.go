@@ -11,6 +11,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"errors"
+	"github.com/phillong97254/go-lib/database"
 	"log"
 	"log/slog"
 	"net/http"
@@ -26,6 +27,7 @@ import (
 	"github.com/phillong97254/auth-service/internal/repository"
 	"github.com/phillong97254/auth-service/internal/service/token"
 	"github.com/phillong97254/auth-service/internal/signer"
+	"github.com/phillong97254/auth-service/migration"
 )
 
 func main() {
@@ -54,8 +56,26 @@ func main() {
 	}
 	defer gwy.Close()
 
+	// Init Database (+ migration)
+	db, err := database.New(database.Config{
+		URL:                   cfg.DB.URL,
+		MaxOpenConnections:    cfg.DB.MaxOpenConnections,
+		MaxIdleConnections:    cfg.DB.MaxIdleConnections,
+		ConnectionMaxLifetime: cfg.DB.ConnectionMaxLifetime,
+		ConnectionMaxIdleTime: cfg.DB.ConnectionMaxIdleTime,
+		LogSQL:                cfg.DB.LogSQL,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	if cfg.DB.AutoMigrate {
+		if err := database.Migrate(cfg.DB.URL, migration.FS, migration.Dir); err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	// Repository -> Service -> Handler
-	repo := repository.New(cfg)
+	repo := repository.New(cfg, db)
 	tokenSvc := token.New(cfg, logger, repo, gwy, sign)
 	handler := v1.New(logger, tokenSvc)
 

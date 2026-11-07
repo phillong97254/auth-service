@@ -20,3 +20,12 @@ oauth:
 authz_service:
   addr: localhost:50052
   timeout: 3 # giây
+
+db:
+  url: "" # KHÔNG ghi ở đây, đặt qua env DB_URL (file .env, không commit)
+  max_open_connections: 20
+  max_idle_connections: 10
+  connection_max_lifetime: 5 # phút
+  connection_max_idle_time: 5 # phút
+  auto_migrate: true
+  log_sql: false

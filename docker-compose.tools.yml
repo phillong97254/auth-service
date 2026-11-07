@@ -6,3 +6,12 @@ services:
     volumes:
       - .:/tool
     working_dir: /tool
+    environment:
+      PROTO_GEN_CONFIG_FILE: "buf.gen.yaml"
+      DB_URL: postgres://auth:${DB_PASSWORD:?đặt trong .env (xem .env.example)}@postgres:5432/auth_db?sslmode=disable
+    networks:
+      - auth-service-network
+
+networks:
+  auth-service-network:
+    driver: bridge

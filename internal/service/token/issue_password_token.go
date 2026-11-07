@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 
 	authzGwy "github.com/phillong97254/auth-service/internal/gateway/authz"
 	userRepo "github.com/phillong97254/auth-service/internal/repository/user"
@@ -20,7 +21,7 @@ func (i *impl) IssuePasswordToken(ctx context.Context, input IssuePasswordTokenI
 	if err != nil {
 		return TokenOutput{}, err
 	}
-	if !secretEqual(u.Password, input.Password) {
+	if bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(input.Password)) != nil {
 		return TokenOutput{}, ErrInvalidGrant
 	}
 
